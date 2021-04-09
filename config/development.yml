@@ -1,0 +1,42 @@
+tess:
+  api:
+    base: http://localhost:3000
+    email: chris.child@gmail.com
+    token: rqDfvsMbsGqrM34r1Up3
+providers:
+  - name: EBI
+    url: http://localhost:8000/
+queries:
+  - Name: TrainingMaterial
+    Query: '
+      prefix schema:  <http://schema.org/>
+      prefix rdfns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+      select ?trainingMaterial ?name ?abstract ?url ?keywords ?description ?dateCreated ?license ?learningResourceType ?about where {
+      ?trainingMaterial rdfns:type schema:TrainingMaterial .
+      ?trainingMaterial schema:name ?name .
+      ?trainingMaterial schema:abstract ?abstract .
+      ?trainingMaterial schema:url ?url .
+      ?trainingMaterial schema:keywords ?keywords .
+      ?trainingMaterial schema:description ?description .
+      ?trainingMaterial schema:dateCreated ?dateCreated .
+      ?trainingMaterial schema:license ?license .
+      ?trainingMaterial schema:learningResourceType ?learningResourceType .
+      ?trainingMaterial schema:about ?about .
+      }
+    '
+  - Name: Event
+    Query: '
+      prefix schema:  <http://schema.org/>
+      prefix rdfns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+      select ?event ?name ?description ?url ?endDate where {
+      ?event rdfns:type schema:Event .
+      OPTIONAL { ?event schema:name ?name . } .
+      OPTIONAL { ?event schema:abstract ?abstract . } .
+      OPTIONAL { ?event schema:url ?url . } .
+      OPTIONAL { ?event schema:description ?description . } .
+      OPTIONAL { ?event schema:startDate ?startDate . } .
+      OPTIONAL { ?event schema:endDate ?endDate . } .
+      }
+    '
