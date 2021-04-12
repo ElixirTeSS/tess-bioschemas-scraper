@@ -1,12 +1,13 @@
-const config = require('config');
+import { logger } from './setup/logger';
+
+import config from 'config';
 const providers: Array<{ name: string; url: string }> = config.get('providers');
 const queries: Array<{ Name: string; Query: string }> = config.get('queries');
-const logger = require('./setup/logger');
 
 import { Event } from './TessApi/Event';
 import { Material } from './TessApi/Material';
 
-const nodeFetch = require('node-fetch');
+import nodeFetch from 'node-fetch';
 const engine = require('@comunica/actor-init-sparql').newEngine();
 
 logger.info(`Using config file: ${config.util.getConfigSources()[0].name}`);
@@ -19,11 +20,16 @@ const start = async function () {
 
   let validURLs = [];
 
+  let checking = [];
   for (const url of urls) {
-    if (await checkURL(url)) {
+    let validUrl = checkURL(url);
+    checking = [...checking, validUrl];
+    if (validUrl) {
       validURLs = [...validURLs, url];
     }
   }
+
+  await Promise.all(checking);
 
   const config = {
     sources: validURLs,
@@ -32,9 +38,12 @@ const start = async function () {
   let totalQueries = queries.length;
   for (const queryInfo of queries) {
     try {
-      const { bindingsStream } = await engine.query(queryInfo.Query, config);
+      const { bindingsStream: bs } = await engine.query(
+        queryInfo.Query,
+        config
+      );
 
-      bindingsStream.on('data', function (data) {
+      bs.on('data', function (data) {
         switch (queryInfo.Name) {
           case 'Event':
             let event = new Event(data);
@@ -51,14 +60,14 @@ const start = async function () {
       });
 
       //Ensure node exits when we have finished reading all the endpoints
-      bindingsStream.on('end', function (data) {
+      bs.on('end', function (data) {
         totalQueries--;
         if (totalQueries == 0) {
           process.exit(0); // none error exit
         }
       });
 
-      bindingsStream.on('error', function (error) {
+      bs.on('error', function (error) {
         logger.info(`${error}`);
       });
     } catch (ex) {

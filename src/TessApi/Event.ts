@@ -1,5 +1,4 @@
 import { Content } from './Content';
-
 class Event extends Content {
   name: string;
   description: string;

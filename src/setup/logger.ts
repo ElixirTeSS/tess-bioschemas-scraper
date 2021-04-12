@@ -1,13 +1,13 @@
-const winston = require('winston');
-require('winston-daily-rotate-file');
+import { Logger, createLogger, format, transports } from 'winston';
+import 'winston-daily-rotate-file';
 
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
-    winston.format.printf((info) => `[${info.timestamp}] ${info.message}`)
+const logger: Logger = createLogger({
+  format: format.combine(
+    format.timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
+    format.printf((info) => `[${info.timestamp}] ${info.message}`)
   ),
   transports: [
-    new winston.transports.DailyRotateFile({
+    new transports.DailyRotateFile({
       filename: 'logs/%DATE%.log',
       maxFiles: '14d',
     }),
@@ -16,15 +16,14 @@ const logger = winston.createLogger({
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize({ all: true }),
-        winston.format.timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
-        winston.format.printf((info) => `[${info.timestamp}] ${info.message}`)
+    new transports.Console({
+      format: format.combine(
+        format.colorize({ all: true }),
+        format.timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
+        format.printf((info) => `[${info.timestamp}] ${info.message}`)
       ),
     })
   );
 }
 
-module.exports = logger;
-export {};
+export { logger };
