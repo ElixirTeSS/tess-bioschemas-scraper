@@ -1,15 +1,15 @@
 import { Content } from './Content';
 
 class Material extends Content {
-  name: any;
-  abstract: any;
-  url: any;
-  keywords: any;
-  description: any;
-  dateCreated: any;
-  license: any;
-  learningResourceType: any;
-  about: any;
+  name: string;
+  abstract: string;
+  url: string;
+  keywords: string;
+  description: string;
+  dateCreated: string;
+  license: string;
+  learningResourceType: string;
+  about: string;
   constructor(data: any) {
     super();
     this._base = `${this._base}/materials`;

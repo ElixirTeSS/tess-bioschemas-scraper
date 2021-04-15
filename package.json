@@ -12,10 +12,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@comunica/actor-init-sparql": "^1.19.2",
+    "@comunica/actor-http-proxy": "^1.20.0",
+    "@comunica/actor-init-sparql": "1.20.0",
+    "@comunica/mediatortype-time": "^1.20.0",
     "config": "^3.3.6",
+    "express": "^4.17.1",
     "js-yaml": "^4.0.0",
     "node-fetch": "^2.6.1",
+    "puppeteer": "^8.0.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0"
   },

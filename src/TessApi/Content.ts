@@ -1,51 +1,68 @@
-const config = require('config');
-const fetch = require('node-fetch');
+import config from 'config';
+import fetch from 'node-fetch';
 
-const logger = require('../setup/logger');
+import { logger } from '../setup/logger';
 
 class Content {
-  protected _email: string;
-  protected _token: string;
+  protected user_email: string;
+  protected user_token: string;
   protected _base: string;
 
+  public id: number;
+
   constructor() {
-    this._email = config.get('tess.api.email');
-    this._token = config.tess.api.token;
-    this._base = config.tess.api.base;
+    this.user_email = config.get('tess.api.email');
+    this.user_token = config.get('tess.api.token');
+    this._base = config.get('tess.api.base');
   }
 
   json(): string {
-    let values: object = {};
+    let values = {};
 
     Object.entries(Object.getOwnPropertyDescriptors(this)).forEach(
       ([key, value]) => {
         if (key[0] !== '_') {
-          values[key] = value;
+          values[key] = value?.value;
         }
       }
     );
 
-    return values.toString();
+    return JSON.stringify(values);
   }
 
+  async create() {
+    const options = {
+      method: 'POST',
+      body: this.json(),
+    };
+
+    const created = await this.request(options);
+    this.id = created.id;
+
+    return created?.id !== null;
+  }
+
+  async update() {}
+
   async exists(eventUrl) {
-    let url = 'check_exists.json';
+    let url = 'check_exists';
 
     const options = {
       method: 'POST',
       body: JSON.stringify({ url: eventUrl }),
     };
 
-    const exists = await this.request(url, options);
+    const exists = await this.request(options, url);
     return exists?.id !== null;
   }
 
-  async request(endpoint = '', options = {}) {
-    let url = `${this._base}/${endpoint}`;
+  async request(options: object = {}, endpoint?: string) {
+    let url =
+      endpoint !== undefined
+        ? `${this._base}/${endpoint}.json`
+        : `${this._base}.json`;
 
     let headers = {
-      user_email: this._email,
-      user_token: this._token,
       'Content-type': 'application/json',
     };
 

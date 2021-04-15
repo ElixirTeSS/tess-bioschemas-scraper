@@ -5,7 +5,7 @@ tess:
     token: rqDfvsMbsGqrM34r1Up3
 providers:
   - name: EBI
-    url: http://localhost:8000/
+    url: http://localhost:8000
 queries:
   - Name: TrainingMaterial
     Query: '
@@ -30,13 +30,16 @@ queries:
       prefix schema:  <http://schema.org/>
       prefix rdfns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-      select ?event ?name ?description ?url ?endDate where {
+      select *
+      where {
       ?event rdfns:type schema:Event .
       OPTIONAL { ?event schema:name ?name . } .
-      OPTIONAL { ?event schema:abstract ?abstract . } .
       OPTIONAL { ?event schema:url ?url . } .
       OPTIONAL { ?event schema:description ?description . } .
       OPTIONAL { ?event schema:startDate ?startDate . } .
       OPTIONAL { ?event schema:endDate ?endDate . } .
+      OPTIONAL { ?event schema:keywords ?keywords . } .
+      OPTIONAL { ?event schema:contact ?contact . } .
+      OPTIONAL { ?event schema:topic ?topic . } .
       }
     '
