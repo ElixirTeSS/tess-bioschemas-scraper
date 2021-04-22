@@ -52,7 +52,7 @@ class Proxy {
       }
     });
 
-    app.listen(1875, () => console.log('Proxy running on port: 1875'));
+    app.listen(8888, () => console.log('Proxy running on port: 8888'));
   }
 }
 
