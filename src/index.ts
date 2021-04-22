@@ -32,42 +32,44 @@ const start = async function () {
 
   await Promise.all(checking);
 
-  const config = {
-    sources: validURLs,
-    httpProxyHandler: new ProxyHandlerStatic('http://localhost:1875?url='),
-  };
+  // const config = {
+  //   sources: validURLs,
+  //   httpProxyHandler: new ProxyHandlerStatic('http://localhost:8888?url='),
+  // };
 
   let events: Array<Event> = [];
-  for (const queryInfo of eventQueries()) {
-    try {
-      const { bindingsStream: bs } = await engine.query(queryInfo, config);
+  for (const endpoint of validURLs) {
+    for (const queryInfo of eventQueries()) {
+      try {
+        const result = await engine.query(queryInfo, {
+          sources: [endpoint],
+        });
 
-      bs.on('data', async function (data) {
-        logger.info(data);
-        const url = data.get(`?url`)?.value;
-        let event = events.find((event) => event.url == url);
+        const bindings = await result.bindings();
 
-        if (event) {
-          event.set(data);
-        } else {
-          event = new Event(data);
-          events = [...events, event];
+        for (const data of bindings) {
+          const eventUrl = data.get(`?url`)?.value;
+          let event = events.find((event) => event.url == eventUrl);
+
+          if (event) {
+            event.set(endpoint, data);
+          } else {
+            event = new Event(endpoint, data);
+            events = [...events, event];
+          }
+
+          logger.info(`Found Event Data: ${event.url}`);
+          logger.info(events[0]);
         }
-
-        logger.info(`Found Event Data: ${event.url}`);
-        logger.info(events[0]);
-      });
-
-      bs.on('end', function () {
-        logger.info(`End`);
-      });
-
-      bs.on('error', function (error) {
-        logger.info(`${error}`);
-      });
-    } catch (ex) {
-      logger.info(`${ex}`);
+      } catch (ex) {
+        logger.info(`${ex}`);
+      }
     }
+  }
+
+  //Save all events
+  for (const event of events) {
+    event.createOrUpdate();
   }
 };
 

@@ -1,11 +1,9 @@
 import { Content } from './Content';
 class Event extends Content {
   title: string;
-  url: string;
   description: string;
   start: string;
   end: string;
-  address: string;
   subtitle: string;
   event_type: string;
   eligibility: string;
@@ -18,7 +16,15 @@ class Event extends Content {
   sponsors: Array<{ name: string; email: string; url: string }>;
   host_institution: Array<{ name: string; email: string; url: string }>;
 
-  constructor(data: any) {
+  venue: string;
+  city: string;
+  county: string;
+  country: string;
+  postcode: string;
+  latitude: number;
+  longitude: number;
+
+  constructor(endpoint: string, data: any) {
     super();
     this._base = `${this._base}/events`;
 
@@ -29,29 +35,32 @@ class Event extends Content {
     this.sponsors = [];
     this.host_institution = [];
 
-    this.set(data);
+    this.set(endpoint, data);
   }
 
-  set(data) {
-    this.title = data.get(`?name`)?.value ?? this.title;
-    this.url = data.get(`?url`)?.value ?? this.url;
-    this.description = data.get(`?description`)?.value ?? this.description;
-    this.start = data.get(`?startDate`)?.value ?? this.start;
-    this.end = data.get(`?endDate`)?.value ?? this.end;
-    this.address = data.get(`?location`)?.value ?? this.address;
-    this.subtitle = data.get(`?alternativeNme`)?.value ?? this.subtitle;
-    this.event_type = data.get(`?eventType`)?.value ?? this.event_type;
-    this.eligibility = data.get(`?eligibility`)?.value ?? this.eligibility;
-    this.capacity =
-      data.get(`?maximumAttendeeCapacity`)?.value ?? this.capacity;
+  set(endpoint, data) {
+    this.setValue('title', data.get(`?name`));
+    this.setValue('url', data.get(`?url`));
+    this.setValue('description', data.get(`?description`));
+    this.setValue('start', data.get(`?startDate`));
+    this.setValue('end', data.get(`?endDate`));
+    this.setValue('subtitle', data.get(`?alternateName`));
+    this.setValue('event_type', data.get(`?eventType`));
+    this.setValue('eligibility', data.get(`?eligibility`));
+    this.setValue('capacity', data.get(`?maximumAttendeeCapacity`));
 
-    if (data.get(`?contactName`) != null) {
+    endpoint = this.trim(endpoint);
+
+    if (data.get(`?contact`) != null) {
       this.organizer = [
         ...this.organizer,
         {
-          name: data.get(`?contactName`)?.value,
-          email: data.get(`?contactEmail`)?.value,
-          url: data.get(`?contactUrl`)?.value,
+          name: this.getValue(data.get(`?contactName`)),
+          email: this.getValue(data.get(`?contactEmail`)),
+          url:
+            this.trim(data.get(`?contactUrl`)?.value) == endpoint
+              ? ''
+              : this.getValue(data.get(`?contactUrl`)),
         },
       ];
     }
@@ -59,41 +68,57 @@ class Event extends Content {
     if (data.get(`?audience`) != null) {
       this.target_audience = [
         ...this.target_audience,
-        data.get(`?audience`)?.value,
+        this.getValue(data.get(`?audience`)),
       ];
     }
 
     if (data.get(`?keywords`) != null) {
-      this.keywords = [...this.keywords, data.get(`?keywords`)?.value];
+      this.keywords = [...this.keywords, this.getValue(data.get(`?keywords`))];
     }
 
     if (data.get(`?topic`) != null) {
       this.scientific_topics = [
         ...this.scientific_topics,
-        data.get(`?topic`)?.value,
+        this.getValue(data.get(`?topic`)),
       ];
     }
 
-    if (data.get(`?sponsorName`) != null) {
+    if (data.get(`?sponsor`) != null) {
       this.sponsors = [
         ...this.sponsors,
         {
-          name: data.get(`?sponsorName`)?.value,
-          email: data.get(`?sponsorEmail`)?.value,
-          url: data.get(`?sponsorUrl`)?.value,
+          name: this.getValue(data.get(`?sponsorName`)),
+          email: this.getValue(data.get(`?sponsorEmail`)),
+          url:
+            this.trim(data.get(`?sponsorUrl`)?.value) == endpoint
+              ? ''
+              : this.getValue(data.get(`?sponsorUrl`)),
         },
       ];
     }
 
-    if (data.get(`?hostName`) != null) {
+    if (data.get(`?host`) != null) {
       this.host_institution = [
         ...this.host_institution,
         {
-          name: data.get(`?hostName`)?.value,
-          email: data.get(`?hostEmail`)?.value,
-          url: data.get(`?hostUrl`)?.value,
+          name: this.getValue(data.get(`?hostName`)),
+          email: this.getValue(data.get(`?hostEmail`)),
+          url:
+            this.trim(data.get(`?hostUrl`)?.value) == endpoint
+              ? ''
+              : this.getValue(data.get(`?hostUrl`)),
         },
       ];
+    }
+
+    if (data.get(`?location`) != null) {
+      this.venue = `${this.getValue(data.get(`?placeName`))} ${this.getValue(
+        data.get(`?streetAddress`)
+      )}`;
+      this.city = this.getValue(data.get(`?addressLocality`));
+      this.county = this.getValue(data.get(`?addressRegion`));
+      this.country = this.getValue(data.get(`?addressCountry`));
+      this.postcode = this.getValue(data.get(`?postalCode`));
     }
   }
 }
@@ -114,18 +139,12 @@ function queries() {
 
   let queries = [];
 
-  // test query
-  // queries.push(`
-  // SELECT * WHERE {?s ?p ?o}
-  // `);
-
   //main query
   queries.push(`
   ${queryStart}
   OPTIONAL { ?event schema:description ?description . } .
   OPTIONAL { ?event schema:startDate ?startDate . } .
   OPTIONAL { ?event schema:endDate ?endDate . } .
-  OPTIONAL { ?event schema:location ?location . } .
   OPTIONAL { ?event schema:alternateName ?alternateName . } .
   OPTIONAL { ?event schema:eventType ?eventType . } .
   OPTIONAL { ?event schema:eligibility ?eligibility . } .
@@ -135,7 +154,7 @@ function queries() {
 
   //contact
   queries.push(`${queryStart}
-  OPTIONAL { ?event schema:contact ?contact . } .
+  ?event schema:contact ?contact .
   OPTIONAL { ?contact schema:name ?contactName . } .
   OPTIONAL { ?contact schema:email ?contactEmail . } .
   OPTIONAL { ?contact schema:url ?contactUrl . } .
@@ -144,8 +163,14 @@ function queries() {
 
   //audience
   queries.push(`${queryStart}
-  OPTIONAL { ?event schema:audience schema:Event . } .
   OPTIONAL { ?event schema:audience ?audience . } .
+  ${queryEnd}
+  `);
+
+  queries.push(`${queryStart}
+  ?event schema:audience ?audience .
+  ?audience rdfns:type schema:audience .
+  ?audience schema:audienceType ?audience
   ${queryEnd}
   `);
 
@@ -163,19 +188,32 @@ function queries() {
 
   //sponsors
   queries.push(`${queryStart}
-  OPTIONAL { ?event schema:sponsor ?sponsor . } .
+  ?event schema:sponsor ?sponsor .
   OPTIONAL { ?sponsor schema:name ?sponsorName . } .
   OPTIONAL { ?sponsor schema:email ?sponsorEmail . } .
-  OPTIONAL { ?sponsor schema:email ?sponsorUrl . } .
+  OPTIONAL { ?sponsor schema:url ?sponsorUrl . } .
   ${queryEnd}
   `);
 
   //host institution
   queries.push(`${queryStart}
-  OPTIONAL { ?event schema:hostInstitution ?host . } .
+  ?event schema:hostInstitution ?host .
   OPTIONAL { ?host schema:name ?hostName . } .
   OPTIONAL { ?host schema:email ?hostEmail . } .
   OPTIONAL { ?host schema:url ?hostUrl . } .
+  ${queryEnd}
+  `);
+
+  //location
+  queries.push(`${queryStart}
+  OPTIONAL { ?event schema:location ?location . } .
+  OPTIONAL { ?location schema:name ?placeName . } .
+  OPTIONAL { ?location schema:address ?address . } .
+  OPTIONAL { ?address schema:streetAddress ?streetAddress . } .
+  OPTIONAL { ?address schema:addressCountry ?addressCountry . } .
+  OPTIONAL { ?address schema:addressLocality ?addressLocality . } .
+  OPTIONAL { ?address schema:addressRegion ?addressRegion . } .
+  OPTIONAL { ?address schema:postalCode ?postalCode . } .
   ${queryEnd}
   `);
 

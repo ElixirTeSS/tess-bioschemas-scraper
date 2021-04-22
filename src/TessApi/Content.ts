@@ -9,6 +9,7 @@ class Content {
   protected _base: string;
 
   public id: number;
+  public url: string;
 
   constructor() {
     this.user_email = config.get('tess.api.email');
@@ -30,6 +31,30 @@ class Content {
     return JSON.stringify(values);
   }
 
+  getValue(data) {
+    if (data == null) {
+      return '';
+    } else return data.value;
+  }
+
+  setValue(field, data) {
+    if (data != null) {
+      this[field] = this.trim(data.value);
+    }
+  }
+
+  trim(value) {
+    return value.replace(/\/+$/, '');
+  }
+
+  async createOrUpdate() {
+    if (await this.exists()) {
+      await this.update();
+    } else {
+      await this.create();
+    }
+  }
+
   async create() {
     const options = {
       method: 'POST',
@@ -42,18 +67,30 @@ class Content {
     return created?.id !== null;
   }
 
-  async update() {}
+  async update() {
+    const url = this.id.toString();
 
-  async exists(eventUrl) {
+    const options = {
+      method: 'PUT',
+      body: this.json(),
+    };
+
+    const created = await this.request(options, url);
+
+    return created?.id !== null;
+  }
+
+  async exists() {
     let url = 'check_exists';
 
     const options = {
       method: 'POST',
-      body: JSON.stringify({ url: eventUrl }),
+      body: JSON.stringify({ url: this.url }),
     };
 
     const exists = await this.request(options, url);
-    return exists?.id !== null;
+    this.id = exists?.id;
+    return exists?.id != null;
   }
 
   async request(options: object = {}, endpoint?: string) {
