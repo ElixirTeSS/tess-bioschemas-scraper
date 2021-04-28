@@ -24,7 +24,9 @@ logger.info(`Using config file: ${config.util.getConfigSources()[0].name}`);
 
 // Start function
 const start = async function () {
-  logger.info(`\n\nStart\n\n`);
+  let totalSaved = 0;
+  let totalFound = 0;
+  logger.info(`Starting Scraper`);
 
   let validProviders = [];
 
@@ -49,11 +51,11 @@ const start = async function () {
     ///create content provider in TeSS
     let cp;
     try {
-      logger.error(`New Content Provider: ${provider.name}`);
+      logger.info(`New Content Provider: ${provider.title}`);
       cp = new ContentProvider(provider);
       await cp.createOrUpdate();
     } catch (error) {
-      logger.error(`Content Provider Failed: ${provider.name}`);
+      logger.error(`Content Provider Failed: ${provider.title}`);
       logger.error(error);
       return false;
     }
@@ -77,6 +79,7 @@ const start = async function () {
             event = new Event(provider.url, data, cp);
             events = [...events, event];
             logger.info(`Found: ${event.url}`);
+            totalFound++;
           }
         }
       } catch (error) {
@@ -87,17 +90,24 @@ const start = async function () {
   }
 
   //Save all events
-  logger.info(`\n\nSaving\n\n`);
+  logger.info(`Starting Save`);
   for (const event of events) {
     try {
       logger.info(`Saving: ${event.url}`);
       await event.createOrUpdate();
+      totalSaved++;
     } catch (error) {
       logger.error(`Saving failed: ${event.url}`);
       logger.error(error);
       return false;
     }
   }
+
+  logger.info(`Total Found: ${totalFound}`);
+  logger.info(`Total Saved: ${totalSaved}`);
+  logger.info(`Finished`);
+
+  process.exit();
 };
 
 async function checkURL(url) {
