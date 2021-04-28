@@ -47,9 +47,10 @@ const start = async function () {
   let events: Array<Event> = [];
   for (const provider of validProviders) {
     ///create content provider in TeSS
+    let cp;
     try {
       logger.error(`New Content Provider: ${provider.name}`);
-      const cp = new ContentProvider(provider);
+      cp = new ContentProvider(provider);
       await cp.createOrUpdate();
     } catch (error) {
       logger.error(`Content Provider Failed: ${provider.name}`);
