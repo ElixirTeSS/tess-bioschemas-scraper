@@ -8,13 +8,18 @@ class Content {
   protected user_token: string;
   protected _base: string;
 
-  public id: number;
-  public url: string;
+  id: number;
+  url: string;
+
+  last_scraped: string;
+  scraper_record: Boolean;
 
   constructor() {
     this.user_email = config.get('tess.api.email');
     this.user_token = config.get('tess.api.token');
     this._base = config.get('tess.api.base');
+    this.last_scraped = new Date().toISOString();
+    this.scraper_record = true;
   }
 
   json(): string {

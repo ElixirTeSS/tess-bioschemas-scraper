@@ -1,8 +1,17 @@
 import { logger } from './setup/logger';
 
 import config from 'config';
-const providers: Array<{ name: string; url: string }> = config.get('providers');
+const providers: Array<{
+  title: string;
+  url: string;
+  image_url: string;
+  description: string;
+  content_provider_type: string;
+  node_name: string;
+  keywords: Array<string>;
+}> = config.get('providers');
 
+import { ContentProvider } from './TessApi/ContentProvider';
 import { Event, queries as eventQueries } from './TessApi/Event';
 
 import nodeFetch from 'node-fetch';
@@ -19,14 +28,14 @@ const start = async function () {
     return provider.url;
   });
 
-  let validURLs = [];
+  let validProviders = [];
 
   let checking = [];
-  for (const url of urls) {
-    let validUrl = checkURL(url);
-    checking = [...checking, validUrl];
-    if (validUrl) {
-      validURLs = [...validURLs, url];
+  for (const provider of providers) {
+    let validProvider = checkURL(provider.url);
+    checking = [...checking, validProvider];
+    if (validProvider) {
+      validProviders = [...validProviders, provider];
     }
   }
 
@@ -38,11 +47,15 @@ const start = async function () {
   // };
 
   let events: Array<Event> = [];
-  for (const endpoint of validURLs) {
+  for (const provider of validProviders) {
+    ///create content provider in TeSS
+    const cp = new ContentProvider(provider);
+    await cp.createOrUpdate();
+
     for (const queryInfo of eventQueries()) {
       try {
         const result = await engine.query(queryInfo, {
-          sources: [endpoint],
+          sources: [provider.url],
         });
 
         const bindings = await result.bindings();
@@ -52,9 +65,9 @@ const start = async function () {
           let event = events.find((event) => event.url == eventUrl);
 
           if (event) {
-            event.set(endpoint, data);
+            event.set(provider.url, data);
           } else {
-            event = new Event(endpoint, data);
+            event = new Event(provider.url, data, cp);
             events = [...events, event];
           }
 
@@ -69,7 +82,7 @@ const start = async function () {
 
   //Save all events
   for (const event of events) {
-    event.createOrUpdate();
+    await event.createOrUpdate();
   }
 };
 

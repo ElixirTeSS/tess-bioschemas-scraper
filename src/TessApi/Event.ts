@@ -1,4 +1,5 @@
 import { Content } from './Content';
+import { ContentProvider } from './ContentProvider';
 class Event extends Content {
   title: string;
   description: string;
@@ -24,9 +25,12 @@ class Event extends Content {
   latitude: number;
   longitude: number;
 
-  constructor(endpoint: string, data: any) {
+  content_provider_id: number;
+
+  constructor(endpoint: string, data: any, cp: ContentProvider) {
     super();
     this._base = `${this._base}/events`;
+    this.content_provider_id = cp.id;
 
     this.organizer = [];
     this.target_audience = [];
