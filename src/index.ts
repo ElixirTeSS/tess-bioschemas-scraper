@@ -99,7 +99,6 @@ const start = async function () {
     } catch (error) {
       logger.error(`Saving failed: ${event.url}`);
       logger.error(error);
-      return false;
     }
   }
 
