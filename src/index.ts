@@ -24,9 +24,7 @@ logger.info(`Using config file: ${config.util.getConfigSources()[0].name}`);
 
 // Start function
 const start = async function () {
-  let urls: Array<string> = providers.map(function (provider) {
-    return provider.url;
-  });
+  logger.info(`\n\nStart\n\n`);
 
   let validProviders = [];
 
@@ -49,8 +47,15 @@ const start = async function () {
   let events: Array<Event> = [];
   for (const provider of validProviders) {
     ///create content provider in TeSS
-    const cp = new ContentProvider(provider);
-    await cp.createOrUpdate();
+    try {
+      logger.error(`New Content Provider: ${provider.name}`);
+      const cp = new ContentProvider(provider);
+      await cp.createOrUpdate();
+    } catch (error) {
+      logger.error(`Content Provider Failed: ${provider.name}`);
+      logger.error(error);
+      return false;
+    }
 
     for (const queryInfo of eventQueries()) {
       try {
@@ -66,23 +71,31 @@ const start = async function () {
 
           if (event) {
             event.set(provider.url, data);
+            logger.info(`More: ${event.url}`);
           } else {
             event = new Event(provider.url, data, cp);
             events = [...events, event];
+            logger.info(`Found: ${event.url}`);
           }
-
-          logger.info(`Found Event Data: ${event.url}`);
-          logger.info(events[0]);
         }
-      } catch (ex) {
-        logger.info(`${ex}`);
+      } catch (error) {
+        logger.error(`Error with Queries`);
+        logger.info(`${error}`);
       }
     }
   }
 
   //Save all events
+  logger.info(`\n\nSaving\n\n`);
   for (const event of events) {
-    await event.createOrUpdate();
+    try {
+      logger.info(`Saving: ${event.url}`);
+      await event.createOrUpdate();
+    } catch (error) {
+      logger.error(`Saving failed: ${event.url}`);
+      logger.error(error);
+      return false;
+    }
   }
 };
 
