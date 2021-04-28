@@ -5,6 +5,7 @@ class ContentProvider extends Content {
   image_url: string;
   description: string;
   content_provider_type: any;
+  node_id: number;
   node_name: string;
   keywords: Array<string>;
   content_provider: any;
@@ -19,6 +20,7 @@ class ContentProvider extends Content {
     this.image_url = provider.image_url;
     this.description = provider.description;
     this.content_provider_type = provider.content_provider_type;
+    this.node_id = provider.node_id;
     this.node_name = provider.node_name;
     this.keywords = provider.keywords;
   }

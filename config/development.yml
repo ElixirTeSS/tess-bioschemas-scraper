@@ -10,4 +10,5 @@ providers:
     description: 'EMBL-EBI provides freely available data from life science experiments, performs basic research in computational biology and offers an extensive user training programme, supporting researchers in academia and industry.'
     content_provider_type: 'organisation'
     node_name: 'EMBL-EBI'
+    node_id: 4 # EMBL-EBI
     keywords: ['HDRUK']
