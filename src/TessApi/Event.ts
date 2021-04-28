@@ -8,7 +8,7 @@ class Event extends Content {
   subtitle: string;
   event_type: string;
   eligibility: string;
-  capacity: string;
+  capacity: number;
 
   organizer: Array<{ name: string; email: string; url: string }>;
   target_audience: Array<string>;
@@ -51,7 +51,7 @@ class Event extends Content {
     this.setValue('subtitle', data.get(`?alternateName`));
     this.setValue('event_type', data.get(`?eventType`));
     this.setValue('eligibility', data.get(`?eligibility`));
-    this.setValue('capacity', data.get(`?maximumAttendeeCapacity`));
+    this.setNum('capacity', data.get(`?maximumAttendeeCapacity`));
 
     endpoint = this.trim(endpoint);
 

@@ -48,6 +48,12 @@ class Content {
     }
   }
 
+  setNum(field, data) {
+    if (data != null) {
+      this[field] = parseInt(this.trim(data.value));
+    }
+  }
+
   trim(value) {
     return value.replace(/\/+$/, '');
   }
