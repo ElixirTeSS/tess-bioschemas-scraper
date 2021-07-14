@@ -38,7 +38,7 @@ class Proxy {
         const url = req.query.url;
         const page = await this.getPage(url);
 
-        //ensure that we have the correct headers require for comunica
+        //ensure that we have the correct headers required for comunica
         if (page.headers['content-type']) {
           res.setHeader('content-type', page.headers['content-type']);
         }
