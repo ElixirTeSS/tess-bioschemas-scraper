@@ -5,10 +5,11 @@ tess:
     token: rqDfvsMbsGqrM34r1Up3
 providers:
   - title: 'European Bioinformatics Institute (EBI)'
-    url: https://trainingcontent.embl.org/api/v1/ebi-training-events-tess
+    url: http://localhost:8000
     image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
     description: 'EMBL-EBI provides freely available data from life science experiments, performs basic research in computational biology and offers an extensive user training programme, supporting researchers in academia and industry.'
     content_provider_type: 'organisation'
     node_name: 'EMBL-EBI'
     node_id: 4 # EMBL-EBI
     keywords: ['HDRUK']
+    type: 'course' # event or course

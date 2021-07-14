@@ -12,7 +12,7 @@ const providers: Array<{
 }> = config.get('providers');
 
 import { ContentProvider } from './TessApi/ContentProvider';
-import { Event, queries as eventQueries } from './TessApi/Event';
+import { Event, eventQueries, courseQueries } from './TessApi/Event';
 
 import nodeFetch from 'node-fetch';
 const engine = require('@comunica/actor-init-sparql').newEngine();
@@ -60,7 +60,9 @@ const start = async function () {
       return false;
     }
 
-    for (const queryInfo of eventQueries()) {
+    let queries = provider.type === 'event' ? eventQueries : courseQueries;
+
+    for (const queryInfo of queries()) {
       try {
         const result = await engine.query(queryInfo, {
           sources: [provider.url],

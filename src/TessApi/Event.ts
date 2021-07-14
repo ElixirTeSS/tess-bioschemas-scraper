@@ -163,7 +163,7 @@ function cvCheck(value: string, vocab: Array<string>): string {
   return found > -1 ? formatted : null;
 }
 
-function queries() {
+function eventQueries() {
   const queryStart = `
   prefix schema:  <http://schema.org/>
   prefix rdfns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -260,4 +260,111 @@ function queries() {
   return queries;
 }
 
-export { Event, queries };
+function courseQueries() {
+  const queryStart = `
+  prefix schema:  <http://schema.org/>
+  prefix rdfns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+  select *
+  where {
+  ?course rdfns:type schema:Course .
+  ?course schema:name ?name .
+  ?course schema:url ?url .
+  `;
+
+  const queryEnd = `}`;
+
+  let queries = [];
+
+  //course
+  //main course query
+  queries.push(`
+  ${queryStart}
+  OPTIONAL { ?course schema:description ?description . } .
+  OPTIONAL { ?course schema:alternateName ?alternateName . } .
+  ${queryEnd}
+  `);
+
+  //audience
+  queries.push(`${queryStart}
+  OPTIONAL { ?course schema:audience ?audience . } .
+  ${queryEnd}
+  `);
+
+  queries.push(`${queryStart}
+  ?course schema:audience ?audience .
+  ?audience rdfns:type schema:audience .
+  ?audience schema:audienceType ?audience
+  ${queryEnd}
+  `);
+
+  //keywords
+  queries.push(`${queryStart}
+  OPTIONAL { ?course schema:keywords ?keywords . } .
+  ${queryEnd}
+  `);
+
+  //topics
+  queries.push(`${queryStart}
+  OPTIONAL { ?course schema:about ?topic . } .
+  ${queryEnd}
+  `);
+
+  //host institution/provider
+  queries.push(`${queryStart}
+  ?course schema:provider ?host .
+  OPTIONAL { ?host schema:name ?hostName . } .
+  OPTIONAL { ?host schema:email ?hostEmail . } .
+  OPTIONAL { ?host schema:url ?hostUrl . } .
+  ${queryEnd}
+  `);
+
+  //courseInstance
+
+  //Main courseInstance query
+  queries.push(`${queryStart}
+  ?course schema:hasCourseInstance ?hasCourseInstance .
+  OPTIONAL { ?hasCourseInstance schema:startDate ?startDate . } .
+  OPTIONAL { ?hasCourseInstance schema:endDate ?endDate . } .
+  OPTIONAL { ?hasCourseInstance schema:maximumAttendeeCapacity ?maximumAttendeeCapacity . } .
+  ${queryEnd}
+  `);
+
+  //contact/organizer
+  queries.push(`${queryStart}
+  ?course schema:hasCourseInstance ?hasCourseInstance .
+  ?hasCourseInstance schema:organizer ?contact .
+  OPTIONAL { ?contact schema:name ?contactName . } .
+  OPTIONAL { ?contact schema:email ?contactEmail . } .
+  OPTIONAL { ?contact schema:url ?contactUrl . } .
+  ${queryEnd}
+  `);
+
+  //sponsors/funder
+  queries.push(`${queryStart}
+  ?course schema:hasCourseInstance ?hasCourseInstance .
+  ?hasCourseInstance schema:funder ?sponsor .
+  OPTIONAL { ?sponsor schema:name ?sponsorName . } .
+  OPTIONAL { ?sponsor schema:email ?sponsorEmail . } .
+  OPTIONAL { ?sponsor schema:url ?sponsorUrl . } .
+  ${queryEnd}
+  `);
+
+  //location
+  queries.push(`${queryStart}
+  ?course schema:hasCourseInstance ?hasCourseInstance .
+  OPTIONAL { ?hasCourseInstance schema:location ?location . } .
+  OPTIONAL { ?location schema:name ?placeName . } .
+  OPTIONAL { ?location schema:address ?address . } .
+  OPTIONAL { ?address schema:streetAddress ?streetAddress . } .
+  OPTIONAL { ?address schema:addressCountry ?addressCountry . } .
+  OPTIONAL { ?address schema:addressLocality ?addressLocality . } .
+  OPTIONAL { ?address schema:addressRegion ?addressRegion . } .
+  OPTIONAL { ?address schema:postalCode ?postalCode . } .
+  ${queryEnd}
+  `);
+
+  return queries;
+}
+
+export { Event, eventQueries, courseQueries };
