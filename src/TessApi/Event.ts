@@ -1,3 +1,4 @@
+import { logger } from '../setup/logger';
 import { Content } from './Content';
 import { ContentProvider } from './ContentProvider';
 class Event extends Content {
@@ -6,16 +7,17 @@ class Event extends Content {
   start: string;
   end: string;
   subtitle: string;
-  event_type: string;
-  eligibility: string;
   capacity: number;
 
-  organizer: Array<{ name: string; email: string; url: string }>;
+  contact: string;
+
   target_audience: Array<string>;
   keywords: Array<string>;
-  scientific_topics: Array<string>;
+  scientific_topic_uris: Array<string>;
   sponsors: Array<{ name: string; email: string; url: string }>;
   host_institution: Array<{ name: string; email: string; url: string }>;
+  event_types: Array<string>;
+  eligibility: Array<string>;
 
   venue: string;
   city: string;
@@ -27,17 +29,30 @@ class Event extends Content {
 
   content_provider_id: number;
 
+  _eventTypes: Array<string> = [
+    'workshops and courses',
+    'meetings and conferences',
+    'receptions and networking',
+    'awards and prizegivings',
+  ];
+
+  _eligibility: Array<string> = [
+    'first come first served',
+    'registration of interest',
+    'by invitation',
+  ];
+
   constructor(endpoint: string, data: any, cp: ContentProvider) {
     super();
     this._base = `${this._base}/events`;
     this.content_provider_id = cp.id;
 
-    this.organizer = [];
     this.target_audience = [];
     this.keywords = [];
-    this.scientific_topics = [];
+    this.scientific_topic_uris = [];
     this.sponsors = [];
     this.host_institution = [];
+    this.event_types = [];
 
     this.set(endpoint, data);
   }
@@ -49,24 +64,19 @@ class Event extends Content {
     this.setValue('start', data.get(`?startDate`));
     this.setValue('end', data.get(`?endDate`));
     this.setValue('subtitle', data.get(`?alternateName`));
-    this.setValue('event_type', data.get(`?eventType`));
-    this.setValue('eligibility', data.get(`?eligibility`));
     this.setNum('capacity', data.get(`?maximumAttendeeCapacity`));
 
     endpoint = this.trim(endpoint);
 
     if (data.get(`?contact`) != null) {
-      this.organizer = [
-        ...this.organizer,
-        {
-          name: this.getValue(data.get(`?contactName`)),
-          email: this.getValue(data.get(`?contactEmail`)),
-          url:
-            this.trim(data.get(`?contactUrl`)?.value) == endpoint
-              ? ''
-              : this.getValue(data.get(`?contactUrl`)),
-        },
-      ];
+      const name = this.getValue(data.get(`?contactName`));
+      const url =
+        this.trim(data.get(`?contactUrl`)?.value) == endpoint
+          ? ''
+          : this.getValue(data.get(`?contactUrl`));
+      const email = this.getValue(data.get(`?contactEmail`));
+
+      this.contact = `${name} ${email} ${url}`;
     }
 
     if (data.get(`?audience`) != null) {
@@ -81,8 +91,8 @@ class Event extends Content {
     }
 
     if (data.get(`?topic`) != null) {
-      this.scientific_topics = [
-        ...this.scientific_topics,
+      this.scientific_topic_uris = [
+        ...this.scientific_topic_uris,
         this.getValue(data.get(`?topic`)),
       ];
     }
@@ -115,6 +125,26 @@ class Event extends Content {
       ];
     }
 
+    if (data.get(`?eventType`) != null) {
+      const formatted = cvCheck(
+        this.getValue(data.get(`?eventType`)),
+        this._eventTypes
+      );
+      if (formatted != null) {
+        this.event_types = [...this.event_types, formatted];
+      }
+    }
+
+    if (data.get(`?eligibility`) != null) {
+      const formatted = cvCheck(
+        this.getValue(data.get(`?eligibility`)),
+        this._eligibility
+      );
+      if (formatted != null) {
+        this.eligibility = [...this.eligibility, formatted];
+      }
+    }
+
     if (data.get(`?location`) != null) {
       this.venue = `${this.getValue(data.get(`?placeName`))} ${this.getValue(
         data.get(`?streetAddress`)
@@ -125,6 +155,12 @@ class Event extends Content {
       this.postcode = this.getValue(data.get(`?postalCode`));
     }
   }
+}
+
+function cvCheck(value: string, vocab: Array<string>): string {
+  const formatted = value.replaceAll(' ', '_');
+  const found = vocab.indexOf(value);
+  return found > -1 ? formatted : null;
 }
 
 function queries() {
