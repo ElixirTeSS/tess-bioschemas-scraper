@@ -60,6 +60,7 @@ const start = async function () {
       return false;
     }
 
+    //TODO: this should be better!
     let queries = provider.type === 'event' ? eventQueries : courseQueries;
 
     for (const queryInfo of queries()) {

@@ -1,6 +1,8 @@
 import { logger } from '../setup/logger';
 import { Content } from './Content';
 import { ContentProvider } from './ContentProvider';
+
+// Represents an event in TeSS - this will be taken from Course/CourseInstance in Bioschemas
 class Event extends Content {
   title: string;
   description: string;

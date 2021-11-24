@@ -1,9 +1,9 @@
 import { Content } from './Content';
 
+// Represents a amterial in TeSS - this will be taken from TrainingMaterial in Bioschemas
 class Material extends Content {
   name: string;
   abstract: string;
-  url: string;
   keywords: string;
   description: string;
   dateCreated: string;
