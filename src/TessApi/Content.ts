@@ -120,13 +120,14 @@ class Content {
     };
 
     const response: Response = await fetch(url, config);
-    const data: any = await response.json();
 
     if (response.ok) {
+      const data: any = await response.json();
       return data;
     }
 
     logger.error(response);
+    logger.error(await response.text());
     throw new Error(await response.json());
   }
 }
