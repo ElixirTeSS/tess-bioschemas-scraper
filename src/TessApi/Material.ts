@@ -1,29 +1,52 @@
 import { Content } from './Content';
+import { ContentProvider } from './ContentProvider';
 
-// Represents a amterial in TeSS - this will be taken from TrainingMaterial in Bioschemas
+// Represents a material in TeSS - this will be taken from TrainingMaterial in Bioschemas
 class Material extends Content {
   name: string;
   abstract: string;
-  keywords: string;
+  keywords: Array<string>;
+  scientific_topic_uris: Array<string>;
   description: string;
   dateCreated: string;
   license: string;
   learningResourceType: string;
   about: string;
-  constructor(data: any) {
-    super();
-    this._base = `${this._base}/materials`;
 
-    //data from rdf/json-ld
-    this.name = data.get('?name')?.value;
-    this.abstract = data.get('?abstract')?.value;
-    this.url = data.get('?url')?.value;
-    this.keywords = data.get('?keywords')?.value;
-    this.description = data.get('?description')?.value;
-    this.dateCreated = data.get('?dateCreated')?.value;
-    this.license = data.get('?license')?.value;
-    this.learningResourceType = data.get('?learningResourceType')?.value;
-    this.about = data.get('?about')?.value;
+  content_provider_id: number;
+
+  constructor(endpoint: string, data: any, cp: ContentProvider) {
+    super();
+    this._base = `${this._base}/events`;
+    this.content_provider_id = cp.id;
+
+    this.keywords = [];
+    this.scientific_topic_uris = [];
+
+    this.set(endpoint, data);
+  }
+
+  set(endpoint, data) {
+    this.setValue('name', data.get(`?name`));
+    this.setValue('abstract', data.get(`?abstract`));
+    this.setValue('url', data.get(`?url`));
+    this.setValue('description', data.get(`?description`));
+    this.setValue('license', data.get(`?license`));
+    this.setValue('learningResourceType', data.get(`?learningResourceType`));
+    this.setValue('about', data.get(`?about`));
+
+    if (data.get(`?keywords`) != null) {
+      this.keywords = [...this.keywords, this.getValue(data.get(`?keywords`))];
+    }
+
+    if (data.get(`?topic`) != null) {
+      this.scientific_topic_uris = [
+        ...this.scientific_topic_uris,
+        this.getValue(data.get(`?topic`)),
+      ];
+    }
+
+    endpoint = this.trim(endpoint);
   }
 }
 
