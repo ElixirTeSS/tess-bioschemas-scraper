@@ -50,4 +50,42 @@ class Material extends Content {
   }
 }
 
+function materialQueries() {
+  const queryStart = `
+  prefix schema:  <http://schema.org/>
+  prefix rdfns: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+  select *
+  where {
+  ?course rdfns:type schema:TrainingMaterial .
+  ?course schema:name ?name .
+  ?course schema:url ?url .
+  `;
+
+  const queryEnd = `}`;
+
+  let queries = [];
+
+  //course
+  //main course query
+  queries.push(`
+  ${queryStart}
+  OPTIONAL { ?course schema:abstract ?abstract . } .
+  OPTIONAL { ?course schema:description ?description . } .
+  OPTIONAL { ?course schema:license ?license . } .
+  OPTIONAL { ?course schema:learningResourceType ?learningResourceType . } .
+  OPTIONAL { ?course schema:about ?about . } .
+  ${queryEnd}
+  `);
+
+  //keywords
+  queries.push(`${queryStart}
+  OPTIONAL { ?course schema:keywords ?keywords . } .
+  ${queryEnd}
+  `);
+
+
+  return queries;
+}
+
 export { Material };
