@@ -25,3 +25,7 @@ This fille needs updating with the URL and API key for the TeSS installation.
 Once you have install the dependencies, you can run the scraper with the following command:
 
 `npm run start`
+
+## Debugging
+
+All logs are written to the `logs/` directory. Each day a new log file is created.
