@@ -1,0 +1,1 @@
+If any field is not defined with the corresponding schema location/query, the field will be set to empty. Some schemas provide alternatives. E.g. location in bioschemas might use PostalAddress, or a nested PostalAddress, so variations are included

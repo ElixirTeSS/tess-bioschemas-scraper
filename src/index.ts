@@ -15,17 +15,21 @@ import { ContentProvider } from './TessApi/ContentProvider';
 import { Event, eventQueries, courseQueries } from './TessApi/Event';
 
 import nodeFetch from 'node-fetch';
+import { Headers } from 'node-fetch';
+
 const engine = require('@comunica/actor-init-sparql').newEngine();
 import { ProxyHandlerStatic } from '@comunica/actor-http-proxy';
 
 import { Proxy } from './Proxy';
 
+const GetSitemapLinks = require("get-sitemap-links").default;
+const WAE = require('web-auto-extractor').default
+const jsonata = require("jsonata");
+
 logger.info(`Using config file: ${config.util.getConfigSources()[0].name}`);
 
 // Start function
 const start = async function () {
-  let totalSaved = 0;
-  let totalFound = 0;
   logger.info(`Starting Scraper`);
 
   let validProviders = [];
@@ -41,59 +45,108 @@ const start = async function () {
 
   await Promise.all(checking);
 
-  // const config = {
-  //   sources: validURLs,
-  //   httpProxyHandler: new ProxyHandlerStatic('http://localhost:8888?url='),
-  // };
-
   let events: Array<Event> = [];
   for (const provider of validProviders) {
     ///create content provider in TeSS
-    let cp;
+    let cp: ContentProvider;
     try {
       logger.info(`New Content Provider: ${provider.title}`);
       cp = new ContentProvider(provider);
-      await cp.createOrUpdate();
+      if (cp.valid()) {
+        await cp.createOrUpdate();
+      } else {
+        logger.error(`Invalid Content Provider ${provider.title}, check it has all properties`);
+        logger.error(`${provider.title} has been skipped`);
+        continue;
+      }
     } catch (error) {
       logger.error(`Content Provider Failed: ${provider.title}`);
+      logger.error(`${provider.title} has been skipped`);
       logger.error(error);
-      return false;
+      continue;
     }
 
-    //TODO: this should be better!
-    let queries = provider.type === 'event' ? eventQueries : courseQueries;
+    // New flexible approach
+    // Get sitemap.xml
+    const urlList = cp.sitemap_url ? await sitemap_getUrls(cp.sitemap_url) : [cp.url];
+    for (const url of urlList) {
+      logger.info(`Processing: ${url}`);
+      // Use headers to avoid content negotiation server-side
+      const myHeaders = new Headers({
+        'Accept': 'text/html',
+        'Content-Type': 'text/html'
+      });
+      const response = await nodeFetch(url, { headers: myHeaders });
 
-    for (const queryInfo of queries()) {
-      try {
-        const result = await engine.query(queryInfo, {
-          sources: [provider.url],
-        });
+      const body = await response.text();
 
-        const bindings = await result.bindings();
+      // legacy option if server returns json even after requesting html
+      const strictJson = response.headers.get("content-type") == "application/json"
 
-        for (const data of bindings) {
-          const eventUrl = data.get(`?url`)?.value;
-          let event = events.find((event) => event.url == eventUrl);
+      // Parse results
+      var wae = WAE()
+      var parsed = wae.parse(body)
 
-          if (event) {
-            event.set(provider.url, data);
-            logger.info(`More: ${event.url}`);
-          } else {
-            event = new Event(provider.url, data, cp);
-            events = [...events, event];
-            logger.info(`Found: ${event.url}`);
-            totalFound++;
+      let contentArray = jsonExtractContent(parsed) || [];
+      // Ensure the parsed content is an array
+      contentArray = Symbol.iterator in Object(contentArray) ? contentArray : [contentArray];
+      for (const contentObject of contentArray) {
+        let event = events.find((event) => event.url == url);
+
+        if (event) {
+          event.set(provider.url, contentObject, strictJson);
+          logger.info(`More: ${event.url}`);
+        } else {
+          event = new Event(provider.url, contentObject, cp, strictJson);
+          events = [...events, event];
+          logger.info(`Found: ${event.url}`);
+        }
+      };
+      logger.info(`Generic crawler ${cp.title} on url ${url} found ${contentArray.length} events`);
+
+      if (strictJson) {
+        // Original strict approach
+        logger.info(`Original crawler ${provider.title}`);
+        //TODO: this should be better!
+        let queries = provider.type === 'event' ? eventQueries : courseQueries;
+
+        for (const queryInfo of queries()) {
+          try {
+            const result = await engine.query(queryInfo, {
+              sources: [provider.url],
+            });
+
+            const bindings = await result.bindings();
+
+            for (const data of bindings) {
+              const eventUrl = data.get(`?url`)?.value;
+
+              let event = events.find((event) => event.url == eventUrl);
+
+              if (event) {
+                event.set(provider.url, data, strictJson);
+                logger.info(`More: ${event.url}`);
+              } else {
+                event = new Event(provider.url, data, cp, strictJson);
+                events = [...events, event];
+                logger.info(`Found: ${event.url}`);
+              }
+            }
+          } catch (error) {
+            logger.error(`Error with Queries`);
+            logger.info(`${error}`);
           }
         }
-      } catch (error) {
-        logger.error(`Error with Queries`);
-        logger.info(`${error}`);
       }
+      logger.info(`Flexible AND Strict json crawler ${cp.title} found ${events.length} events`);
     }
   }
 
+
   //Save all events
   logger.info(`Starting Save`);
+  let totalSaved = 0;
+
   for (const event of events) {
     try {
       logger.info(`Saving: ${event.url}`);
@@ -105,7 +158,8 @@ const start = async function () {
     }
   }
 
-  logger.info(`Total Found: ${totalFound}`);
+
+  logger.info(`Total Found: ${events.length}`);
   logger.info(`Total Saved: ${totalSaved}`);
   logger.info(`Finished`);
 
@@ -122,10 +176,49 @@ async function checkURL(url) {
   }
 }
 
+/**
+ * Given a url pointing to a sitemap, returns the list of urls inside it
+ * @param url 
+ * @returns array of url strings
+ */
+async function sitemap_getUrls(url: string) {
+  try {
+    return GetSitemapLinks(url);
+  } catch (error) {
+    logger.error(`Invalid URL ${url}`);
+    return false;
+  }
+}
+
+async function fetch_url(url: string) {
+  try {
+    nodeFetch(url)
+      .then(res => {
+        logger.info(`Response res from fetch_url ${url}:${res.text()}`);
+      })
+      .then(body => {
+        logger.info(`Response body from fetch_url ${url}: ${body}`);
+        return (body)
+      });
+  } catch (error) {
+    logger.error(`Invalid URL ${url}`);
+    return false;
+  }
+}
+
+/**
+ * Given a json containing schema objects returns an array of
+ * elements (events, materials, or any other approved content)
+ * @param input json object containing schema objects
+ */
+function jsonExtractContent(input) {
+  const expression = jsonata('**[`@type` in ["Event","Material"]]');
+  return expression.evaluate(input);
+}
 // Call start
 start();
 
 const proxy = new Proxy();
 proxy.startProxy();
 
-export {};
+export { };

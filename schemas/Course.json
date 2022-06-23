@@ -1,0 +1,102 @@
+{
+  "title": [
+    "name"
+  ],
+  "url": [
+    "url"
+  ],
+  "description": [
+    "description"
+  ],
+  "start": [
+    ""
+  ],
+  "end": [
+    ""
+  ],
+  "subtitle": [
+    "alternateName"
+  ],
+  "capacity": [
+    ""
+  ],
+  "contact": [
+    "creator"
+  ],
+  "contact_name": [
+    "creator.name"
+  ],
+  "contact_email": [
+    "creator.email"
+  ],
+  "contact_url": [
+    "creator.url"
+  ],
+  "target_audience": [
+    "audience"
+  ],
+  "keywords": [
+    "keywords"
+  ],
+  "scientific_topic_uris": [
+    "about"
+  ],
+  "sponsor": [
+    ""
+  ],
+  "sponsor_name": [
+    ""
+  ],
+  "sponsor_email": [
+    ""
+  ],
+  "sponsor_url": [
+    ""
+  ],
+  "host_institution": [
+    "provider"
+  ],
+  "host_institution_name": [
+    "provider.name"
+  ],
+  "host_institution_email": [
+    "provider.email"
+  ],
+  "host_institution_url": [
+    "provider.url"
+  ],
+  "event_types": [
+    ""
+  ],
+  "eligibility": [
+    ""
+  ],
+  "location": [
+    ""
+  ],
+  "location_name": [
+    ""
+  ],
+  "location_streetAddress": [
+    ""
+  ],
+  "location_city": [
+    ""
+  ],
+  "location_county": [
+    ""
+  ],
+  "location_country": [
+    ""
+  ],
+  "location_postcode": [
+    ""
+  ],
+  "geo":[""],
+  "geo_longitude": [
+    ""
+  ],
+  "geo_latitude": [
+    ""
+  ]
+}

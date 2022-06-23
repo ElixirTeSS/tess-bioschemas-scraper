@@ -3,6 +3,7 @@ import { Content } from './Content';
 class ContentProvider extends Content {
   title: string;
   image_url: string;
+  sitemap_url: string;
   description: string;
   content_provider_type: any;
   node_id: number;
@@ -17,6 +18,7 @@ class ContentProvider extends Content {
 
     this.title = provider.title;
     this.url = provider.url;
+    this.sitemap_url = provider.sitemap_url;
     this.image_url = provider.image_url;
     this.description = provider.description;
     this.content_provider_type = provider.content_provider_type;
@@ -24,6 +26,14 @@ class ContentProvider extends Content {
     this.node_name = provider.node_name;
     this.keywords = provider.keywords;
   }
+  /**
+   * Checks the object contains minimum set of properties
+   */
+
+  valid() {
+    return (this.title && this.url)
+  }
+
 }
 
 export { ContentProvider };
