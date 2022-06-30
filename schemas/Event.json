@@ -107,7 +107,7 @@
   "geo":["geo"],
   "geo_longitude": [
     "location.address.geo.longitude",
-    "location.**[`@type` in ['GeoCoordinates']].location"
+    "location.**[`@type` in ['GeoCoordinates']].longitude"
   ],
   "geo_latitude": [
     "location.address.geo.latitude",

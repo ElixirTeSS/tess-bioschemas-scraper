@@ -4,6 +4,7 @@ import { ContentProvider } from './ContentProvider';
 const jsonata = require("jsonata");
 const event_schema = require('../../schemas/Event.json');
 const course_schema = require('../../schemas/Course.json');
+const courseInstance_schema = require('../../schemas/CourseInstance.json');
 // Represents an event in TeSS - this will be taken from Course/CourseInstance in Bioschemas
 class Event extends Content {
   title: string;
@@ -46,7 +47,7 @@ class Event extends Content {
     'by invitation',
   ];
 
-  constructor(endpoint: string, data: any, cp: ContentProvider, strictJsonld) {
+  constructor(endpoint: string, data: any, cp: ContentProvider, strictJsonld = false) {
     super();
     this._base = `${this._base}/events`;
     this.content_provider_id = cp.id;
@@ -167,13 +168,16 @@ class Event extends Content {
 
   setFlexible(endpoint, data) {
     let fields = null;
-    getField(data, ['`@type`']);
     switch (getField(data, ['`@type`'])) {
       case "Event":
         fields = event_schema;
         break;
       case "Course":
+        // For each courseInstance, 
         fields = course_schema;
+        break;
+      case "CourseInstance":
+        fields = courseInstance_schema;
         break;
       default:
         fields = event_schema;
@@ -300,17 +304,18 @@ class Event extends Content {
  * @param fieldNameList
  */
 function getField(data, fieldNameList: Array<String>) {
-  logger.info(getField)
-
-  logger.info(fieldNameList)
-  if (!fieldNameList || fieldNameList === [""]) return ""
-  for (const fieldName of fieldNameList) {
-    let value = jsonata(fieldName).evaluate(data)
-    // if it's a string, trim it
-    if (value && value.replace === "function") return value.replace(/(\r\n|\n|\r)/gm, "").trim();
-    if (value) return value;
+  try {
+    if (!fieldNameList) return ""
+    for (const fieldName of fieldNameList) {
+      let value = jsonata(fieldName).evaluate(data)
+      // if it's a string, trim it
+      if (value && value.replace === "function") return value.replace(/(\r\n|\n|\r)/gm, "").trim();
+      if (value) return value;
+    }
+    return ""
+  } catch (error) {
+    return ""
   }
-  return ""
 }
 
 /**

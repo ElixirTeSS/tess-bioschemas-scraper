@@ -4,15 +4,16 @@ tess:
     email: admin@tess.elixir-europe.org
     token: 8t4MCyKZyQQdb916v9Q-
 providers:
-  # - title: 'Test Provider strict json'
-  #   url: https://trainingcontent.embl.org/api/v1/ebi-training-courses-tess
-  #   image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
-  #   description: 'TEST-AIT is a test.'
-  #   content_provider_type: 'organisation'
-  #   node_name: 'TEST-AIT'
-  #   node_id: 4 # EMBL-EBI
-  #   keywords: ['HDRUK']
-  #   type: 'course' # event or course
+  - title: 'Test Provider strict json'
+    url: https://trainingcontent.embl.org/api/v1/ebi-training-courses-tess
+    image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
+    description: 'TEST-AIT is a test.'
+    content_provider_type: 'organisation'
+    node_name: 'TEST-AIT'
+    node_id: 4 # EMBL-EBI
+    keywords: ['HDRUK']
+    type: 'course' # event or course
+    debug: true
   - title: 'TeSS provider'
     url: https://tess.elixir-europe.org/events
     image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
@@ -22,15 +23,48 @@ providers:
     node_id: 4
     keywords: ['HDRUK']
     type: 'course' # event or course
-  # - title: 'Sitemap provider'
-  #   url: https://training.vib.be/sitemap.xml
-  #   sitemap_url: https://training.vib.be/sitemap.xml
+    debug: true
+  - title: 'Sitemap provider'
+    url: https://training.vib.be/sitemap.xml
+    sitemap_url: https://training.vib.be/sitemap.xml
+    image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
+    description: 'TEST-AIT is a test.'
+    content_provider_type: 'organisation'
+    node_name: 'TEST-AIT'
+    node_id: 4
+    keywords: ['HDRUK']
+    type: 'course' # event or course
+    debug: true
+  # - title: 'Local Course test'
+  #   url: https://trainingcontent.embl.org/api/v1/ebi-training-courses-tess
+  #   file: ./test/Course-test.json
   #   image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
   #   description: 'TEST-AIT is a test.'
   #   content_provider_type: 'organisation'
   #   node_name: 'TEST-AIT'
-  #   node_id: 4
+  #   node_id: 4 # EMBL-EBI
   #   keywords: ['HDRUK']
   #   type: 'course' # event or course
-
-# https://catalogue.france-bioinformatique.fr/event/439/
+  #   debug: true
+  # - title: 'Local CourseInstance test'
+  #   url: https://trainingcontent.embl.org/api/v1/ebi-training-courses-tess
+  #   file: ./test/CourseInstance-test.json
+  #   image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
+  #   description: 'TEST-AIT is a test.'
+  #   content_provider_type: 'organisation'
+  #   node_name: 'TEST-AIT'
+  #   node_id: 4 # EMBL-EBI
+  #   keywords: ['HDRUK']
+  #   type: 'course' # event or course
+  #   debug: true
+  # - title: 'Local mixed Course-Instance test'
+  #   url: https://trainingcontent.embl.org/api/v1/ebi-training-courses-tess
+  #   file: ./test/Course-mixed-test.json
+  #   image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
+  #   description: 'TEST-AIT is a test.'
+  #   content_provider_type: 'organisation'
+  #   node_name: 'TEST-AIT'
+  #   node_id: 4 # EMBL-EBI
+  #   keywords: ['HDRUK']
+  #   type: 'course' # event or course
+  #   debug: true
