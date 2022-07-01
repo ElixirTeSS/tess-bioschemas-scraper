@@ -11,6 +11,7 @@ class Event extends Content {
   description: string;
   start: string;
   end: string;
+  timezone: string;
   subtitle: string;
   capacity: number;
 
@@ -51,6 +52,7 @@ class Event extends Content {
     super();
     this._base = `${this._base}/events`;
     this.content_provider_id = cp.id;
+    this.timezone = "UTC";
 
     this.target_audience = [];
     this.keywords = [];
@@ -186,6 +188,10 @@ class Event extends Content {
 
     this.title = getField(data, fields.title);
     this.url = getField(data, fields.url);
+    if (this.title==""||this.url==""){
+      logger.error("MISSING TITLE|URL")
+      logger.error(data)
+    }
     this.description = getField(data, fields.description);
     this.start = getField(data, fields.start);
     this.end = getField(data, fields.end);
