@@ -336,7 +336,7 @@ function findField(data, fieldSubName) {
 }
 
 function cvCheck(value: string, vocab: Array<string>): string {
-  const formatted = value.replaceAll(' ', '_');
+  const formatted = value.replace(/ /g, '_');
   const found = vocab.indexOf(value);
   return found > -1 ? formatted : null;
 }
