@@ -29,3 +29,6 @@ Once you have install the dependencies, you can run the scraper with the followi
 ## Debugging
 
 All logs are written to the `logs/` directory. Each day a new log file is created.
+
+## testing
+run `npm run test`
