@@ -1,0 +1,130 @@
+{
+  "title": [
+    "hasCourseInstance[0].name",
+    "name"
+  ],
+  "url": [
+    "hasCourseInstance[0].url",
+    "url"
+  ],
+  "description": [
+    "hasCourseInstance[0].description",
+    "description"
+  ],
+  "start": [
+    "hasCourseInstance[0].startDate"
+  ],
+  "end": [
+    "hasCourseInstance[0].endDate"
+  ],
+  "subtitle": [
+    "hasCourseInstance[0].alternateName",
+    "alternateName"
+  ],
+  "capacity": [
+    "hasCourseInstance[0].maximumAttendeeCapacity"
+  ],
+  "contact": [
+    "hasCourseInstance[0].instructor",
+    "creator"
+  ],
+  "contact_name": [
+    "hasCourseInstance[0].instructor.name",
+    "creator.name"
+  ],
+  "contact_email": [
+    "hasCourseInstance[0].instructor.email",
+    "creator.email"
+  ],
+  "contact_url": [
+    "hasCourseInstance[0].instructor.url",
+    "creator.url"
+  ],
+  "target_audience": [
+    "hasCourseInstance[0].audience",
+    "audience"
+  ],
+  "keywords": [
+    "hasCourseInstance[0].keywords",
+    "keywords"
+  ],
+  "scientific_topic_uris": [
+    "hasCourseInstance[0].about",
+    "about"
+  ],
+  "sponsor": [
+    "hasCourseInstance[0].funder"
+  ],
+  "sponsor_name": [
+    "hasCourseInstance[0].name"
+  ],
+  "sponsor_email": [
+    "hasCourseInstance[0].email"
+  ],
+  "sponsor_url": [
+    "hasCourseInstance[0].url"
+  ],
+  "host_institution": [
+    "hasCourseInstance[0].organizer",
+    "provider"
+  ],
+  "host_institution_name": [
+    "hasCourseInstance[0].organizer.name",
+    "provider.name"
+  ],
+  "host_institution_email": [
+    "hasCourseInstance[0].organizer.email",
+    "provider.email"
+  ],
+  "host_institution_url": [
+    "hasCourseInstance[0].organizer.url",
+    "provider.url"
+  ],
+  "event_types": [],
+  "eligibility": [],
+  "location": [
+    "hasCourseInstance[0].location"
+  ],
+  "location_name": [
+    "hasCourseInstance[0].location.name",
+    "hasCourseInstance[0].location.address.name",
+    "hasCourseInstance[0].location.**[`@type` in ['PostalAddress']].name"
+  ],
+  "location_streetAddress": [
+    "hasCourseInstance[0].location.streetAddress",
+    "hasCourseInstance[0].location.address.streetAddress",
+    "hasCourseInstance[0].location.**[`@type` in ['PostalAddress']].streetAddress"
+  ],
+  "location_city": [
+    "hasCourseInstance[0].location.addressLocality",
+    "hasCourseInstance[0].location.address.addressLocality",
+    "hasCourseInstance[0].location.**[`@type` in ['PostalAddress']].addressLocality"
+  ],
+  "location_county": [
+    "hasCourseInstance[0].location.addressRegion",
+    "hasCourseInstance[0].location.address.addressRegion",
+    "hasCourseInstance[0].location.**[`@type` in ['PostalAddress']].addressRegion"
+  ],
+  "location_country": [
+    "hasCourseInstance[0].location.addressCountry",
+    "hasCourseInstance[0].location.address.addressCountry",
+    "hasCourseInstance[0].location.**[`@type` in ['PostalAddress']].addressCountry"
+  ],
+  "location_postcode": [
+    "hasCourseInstance[0].location.postalCode",
+    "hasCourseInstance[0].location.address.postalCode",
+    "hasCourseInstance[0].location.**[`@type` in ['PostalAddress']].postalCode"
+  ],
+  "geo": [
+    "hasCourseInstance[0].location.address.geo",
+    "hasCourseInstance[0].location.**[`@type` in ['GeoCoordinates']]"
+  ],
+  "geo_longitude": [
+    "hasCourseInstance[0].location.address.geo.longitude",
+    "hasCourseInstance[0].location.**[`@type` in ['GeoCoordinates']].longitude"
+  ],
+  "geo_latitude": [
+    "hasCourseInstance[0].location.address.geo.latitude",
+    "hasCourseInstance[0].location.**[`@type` in ['GeoCoordinates']].latitude"
+  ]
+}

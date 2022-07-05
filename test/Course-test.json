@@ -1,0 +1,97 @@
+{
+  "@context": "https://schema.org/",
+  "@type": "Course",
+  "name": "Parent course title",
+  "description": "The distance learning training course that takes you \r\n        from complete beginner to PQB qualified proofreader in one step.",
+  "hasCourseInstance": [
+    {
+      "@type": "CourseInstance",
+      "courseMode": [
+        "distance learning",
+        "Online"
+      ],
+      "location": "Lausanne",
+      "endDate": "2022-08-25",
+      "inLanguage": "en-GB",
+      "instructor": [
+        {
+          "@type": "Person",
+          "name": "Monique Zahn"
+        }
+      ],
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Academic Price",
+          "price": 240,
+          "eligibleCustomerType": {
+            "@type": "BusinessEntityType",
+            "name": "Academic"
+          },
+          "priceCurrency": "CHF"
+        },
+        {
+          "@type": "Offer",
+          "name": "Industry Price",
+          "price": 1200,
+          "priceCurrency": "CHF",
+          "eligibleCustomerType": {
+            "@type": "BusinessEntityType",
+            "name": "Industrial"
+          }
+        }
+      ],
+      "startDate": "2022-08-22"
+    },
+    {
+      "@context ": "https: //schema.org",
+      "@type": "CourseInstance",
+      "name": "Best Practices in Programming",
+      "description": "# Overview\nThe workshop will focus on learning and internalizing the practices of unit testing, refactoring, and version control through hands-on experience. The first morning will start with an introduction into these concepts and tools used to support them. In the afternoon, we will transition to a *code clinic* and work together in small groups applying these practices to make improvements to **code brought by participants**. The second day will continue with the code clinic.\n\nThe focus of this course is not object-oriented programming, software architecture, design patterns or algorithms. The goal of this course is to introduce skills and techniques for effectively developing software.\n\n# Audience\nIf the answer to two or more of the following questions is “yes”, then this course is for you.\n<ul>\n<li>Do you write software to analyze data or implement in-silico models as part of your daily work?</li>\n<li>Do you write scientific publications based on software you created yourself but do not know what unit testing, refactoring or version control are?</li>\n<li>Are you writing code that you find hard to understand some weeks later?</li>\n<li>Do you have thousands of lines of code, but no automated way of verifying that the code works correctly?</li>\n<li>Do you find yourself regularly using “copy & paste” to re-use code you wrote earlier?</li>\n<li>Do small changes in your code later cause trouble in other unexpected places?</li>\n</ul>\n# Learning objectives\n<p>At the end of the workshop, the participants should be able to:</p>\n<ul>\n<li>identify and avoid the most common mistakes in the process of writing software in a scientific context</li>\n<li>improve the quality of her/his code</li>\n<li>exploit techniques for effectively developing software</li>\n</ul>\n# Prerequisites\n##### Knowledge / competencies\n* Working knowledge of one of the following programming languages: R, python, C/C++, java, perl, Matlab.\n\n##### Technical / material\n* Participants will need <strong>send some extracts of their code at least 2 weeks before the course</strong>\n\n# Application\nThe registration fees for academics are **120 CHF** and **600 CHF** for for-profit companies.\n\nYou will be informed by email of your registration confirmation. Upon reception of the confirmation email, participants will be asked to confirm attendance by paying the fees within 5 days.\n\nDeadline for free-of-charge cancellation is set to **20/06/2021**. Cancellation after this date will not be reimbursed. Please note that participation in SIB courses is subject to our [general conditions](http://www.sib.swiss/training/terms-and-conditions).\n\n# Venue and Time\nThis course will be take in Zurich and start at 9:00 and end around 17:00. Detailed information will be provided to the participants.\n\n\n#  Additional information\nCoordination: Grégoire Rossier\n\nInstructors: Uwe Schmitt, Manuel Weberndorfer, Swen Vermeul, Gerhard Bräunlich, Maria Del, John Hennig (all IT Services, ETHZ).\n\nWe will recommend 0.5 ECTS credits for this course (given that you provide your code and work on it).\n\nYou are welcome to register to the SIB courses mailing list to be informed of all future courses and workshops, as well as all important deadlines using the form [here](https://lists.sib.swiss/mailman/listinfo/courses).\n\nPlease note that participation in SIB courses is subject to our [general conditions](http://www.sib.swiss/training/terms-and-conditions).\n\nSIB abides by the [ELIXIR Code of Conduct](https://elixir-europe.org/events/code-of-conduct). Participants of SIB courses are also required to abide by the same code.\n\nFor more information, please contact [training@sib.swiss](mailto://training@sib.swiss).",
+      "url": "https://webapp2-dev.vital-it.ch/courseadmin/website/course/20220706_XXXX4",
+      "@id": "https://webapp2-dev.vital-it.ch/courseadmin/website/course/20220706_XXXX4",
+      "dct:conformsTo": {
+        "http://purl.org/dc/terms/conformsTo": {
+          "@id": "https://bioschemas.org/profiles/CourseInstance/0.8-DRAFT-2020_10_06",
+          "@type": "CreativeWork"
+        }
+      },
+      "courseMode": [
+        "onsite",
+        "synchronous"
+      ],
+      "location": "Zurich",
+      "endDate": "2022-07-07",
+      "inLanguage": "en-GB",
+      "instructor": [
+        {
+          "@type": "Person",
+          "name": "Grégoire Rossier"
+        }
+      ],
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Academic Price",
+          "price": 120,
+          "eligibleCustomerType": {
+            "@type": "BusinessEntityType",
+            "name": "Academic"
+          },
+          "priceCurrency": "CHF"
+        },
+        {
+          "@type": "Offer",
+          "name": "Industry Price",
+          "price": 600,
+          "priceCurrency": "CHF",
+          "eligibleCustomerType": {
+            "@type": "BusinessEntityType",
+            "name": "Industrial"
+          }
+        }
+      ],
+      "startDate": "2022-07-06"
+    }
+  ]
+}

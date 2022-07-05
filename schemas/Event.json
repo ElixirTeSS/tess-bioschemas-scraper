@@ -1,0 +1,116 @@
+{
+  "title": [
+    "name"
+  ],
+  "url": [
+    "url"
+  ],
+  "description": [
+    "description"
+  ],
+  "start": [
+    "startDate"
+  ],
+  "end": [
+    "endDate"
+  ],
+  "subtitle": [
+    "alternateName"
+  ],
+  "capacity": [
+    "maximumAttendeeCapacity"
+  ],
+  "contact": [
+    "contact"
+  ],
+  "contact_name": [
+    "contact.name"
+  ],
+  "contact_email": [
+    "contact.email"
+  ],
+  "contact_url": [
+    "contact.url"
+  ],
+  "target_audience": [
+    "audience"
+  ],
+  "keywords": [
+    "keywords"
+  ],
+  "scientific_topic_uris": [
+    "topic"
+  ],
+  "sponsor": [
+    "sponsor"
+  ],
+  "sponsor_name": [
+    "sponsor.name"
+  ],
+  "sponsor_email": [
+    "sponsor.email"
+  ],
+  "sponsor_url": [
+    "sponsor.url"
+  ],
+  "host_institution": [
+    "hostInstitution"
+  ],
+  "host_institution_name": [
+    "hostInstitution.name"
+  ],
+  "host_institution_email": [
+    "hostInstitution.email"
+  ],
+  "host_institution_url": [
+    "hostInstitution.url"
+  ],
+  "event_types": [
+    "eventType"
+  ],
+  "eligibility": [
+    "eligibility"
+  ],
+  "location": [
+    "location"
+  ],
+  "location_name": [
+    "location.name",
+    "location.address.name",
+    "location.**[`@type` in ['PostalAddress']].name"
+  ],
+  "location_streetAddress": [
+    "location.streetAddress",
+    "location.address.streetAddress",
+    "location.**[`@type` in ['PostalAddress']].streetAddress"
+  ],
+  "location_city": [
+    "location.addressLocality",
+    "location.address.addressLocality",
+    "location.**[`@type` in ['PostalAddress']].addressLocality"
+  ],
+  "location_county": [
+    "location.addressRegion",
+    "location.address.addressRegion",
+    "location.**[`@type` in ['PostalAddress']].addressRegion"
+  ],
+  "location_country": [
+    "location.addressCountry",
+    "location.address.addressCountry",
+    "location.**[`@type` in ['PostalAddress']].addressCountry"
+  ],
+  "location_postcode": [
+    "location.postalCode",
+    "location.address.postalCode",
+    "location.**[`@type` in ['PostalAddress']].postalCode"
+  ],
+  "geo":["geo"],
+  "geo_longitude": [
+    "location.address.geo.longitude",
+    "location.**[`@type` in ['GeoCoordinates']].longitude"
+  ],
+  "geo_latitude": [
+    "location.address.geo.latitude",
+    "location.**[`@type` in ['GeoCoordinates']].latitude"
+  ]
+}
