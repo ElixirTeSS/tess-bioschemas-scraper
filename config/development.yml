@@ -8,7 +8,7 @@ providers:
     url: https://trainingcontent.embl.org/api/v1/ebi-training-courses-tess
     image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
     description: 'TEST-AIT is a test.'
-    content_provider_type: 'organisation'
+    content_provider_type: 'Organisation'
     node_name: 'TEST-AIT'
     node_id: 4 # EMBL-EBI
     keywords: ['HDRUK']
@@ -18,7 +18,7 @@ providers:
     url: https://tess.elixir-europe.org/events
     image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
     description: 'TEST-AIT is a test.'
-    content_provider_type: 'organisation'
+    content_provider_type: 'Organisation'
     node_name: 'TEST-AIT'
     node_id: 4
     keywords: ['HDRUK']
@@ -29,7 +29,7 @@ providers:
     sitemap_url: https://training.vib.be/sitemap.xml
     image_url: 'https://ebi.emblstatic.net/web_guidelines/EBI-Framework/v1.3/images/logos/EMBL-EBI/EMBL_EBI_Logo_black.svg'
     description: 'TEST-AIT is a test.'
-    content_provider_type: 'organisation'
+    content_provider_type: 'Organisation'
     node_name: 'TEST-AIT'
     node_id: 4
     keywords: ['HDRUK']
