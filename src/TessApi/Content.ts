@@ -7,6 +7,7 @@ class Content {
   protected user_email: string;
   protected user_token: string;
   protected _base: string;
+  protected _pageUrl: string;
 
   id: number;
   url: string;

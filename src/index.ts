@@ -11,8 +11,6 @@ const providers: Array<{
   keywords: Array<string>;
 }> = config.get('providers');
 
-const testJson = require('../test/Course-test.json');
-
 import { ContentProvider } from './TessApi/ContentProvider';
 import { Event, eventQueries, courseQueries } from './TessApi/Event';
 
@@ -118,13 +116,13 @@ const start = async function () {
         if (jsonata('`@type`').evaluate(contentObject) == "Course") {
           const courseObjectArray = extractCourses(contentObject)
           for (const courseObject of courseObjectArray) {
-            const event = new Event(provider.url, courseObject, cp);
+            const event = new Event(provider.url, courseObject, cp, url);
             cpEvents = [...cpEvents, event];
             logger.info(`Found: ${event.url}`);
           }
         }
         else {
-          const event = new Event(provider.url, contentObject, cp);
+          const event = new Event(provider.url, contentObject, cp, url);
           cpEvents = [...cpEvents, event];
           logger.info(`Found: ${event.url}`);
         }

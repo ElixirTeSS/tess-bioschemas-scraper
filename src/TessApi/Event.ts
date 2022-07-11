@@ -48,7 +48,7 @@ class Event extends Content {
     'by invitation',
   ];
 
-  constructor(endpoint: string, data: any, cp: ContentProvider, strictJsonld = false) {
+  constructor(endpoint: string, data: any, cp: ContentProvider, pageUrl: string) {
     super();
     this._base = `${this._base}/events`;
     this.content_provider_id = cp.id;
@@ -60,8 +60,9 @@ class Event extends Content {
     this.sponsors = [];
     this.host_institution = [];
     this.event_types = [];
+    this._pageUrl = pageUrl;
 
-    this.set(endpoint, data, strictJsonld);
+    this.set(endpoint, data, false);
   }
 
   set(endpoint, data, strictJsonld) {
@@ -188,6 +189,10 @@ class Event extends Content {
 
     this.title = getField(data, fields.title);
     this.url = getField(data, fields.url);
+    // Resolve relative URLs against the URL of the page that the data came from
+    if (this._pageUrl) {
+      this.url = new URL(this.url, this._pageUrl).href;
+    }
     if (this.title==""||this.url==""){
       logger.error("MISSING TITLE|URL")
       logger.error(data)
